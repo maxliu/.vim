@@ -1,0 +1,922 @@
+! HZ5-Cru380-120-Full in trans, mesh size in crystal 2mm
+! Stress/displacement analysis in crystal/crucible
+! Densed grid in He top
+! Heater power density = P/(rho*V)
+! Heater power density: 60.1 -> 0 kW, dP/dt=-0.51kW/h
+! He=260slm; HeFlow (m/s) = He-slm/(60.0*A)*P_ref/P_actual*/
+
+$ HPowerDensityStart = 60.1e3/(1770.0*3.14159*(0.457^2-0.431^2)*(1.052-0.06))
+$ HPowerDensityEnd = 0.0/(1770.0*3.14159*(0.457^2-0.431^2)*(1.052-0.06))
+$ HeFlow = 260.0e-3/(60.0*3.14159*0.00555^2)*(14.69/34.0)
+
+$ SSMaxIter = 1 ! Maximum number of steady-state iterations
+$ TimeStepIntervals = 708
+$ TimeStepSize = 600.0
+$ TemperatureIterations = 30
+$ DSIterations = 30
+$ PostFile = "Task35-Case7-HZ5-Cru380-120-p601-DS-Trans1.ep"
+$ OutputFile = "Task35-Case7-HZ5-Cru380-120-p601-DS-Trans1.dat"
+$ OutputIntervals = 12
+$ RestartFile = "Task35-Case7-HZ5-Cru380-120-He260-p601.dat"
+$ RestartPos = 0 ! If zero, then the last time-step in the file is read
+$ RestartTime = 0.0
+$ TTime = RestartTime+TimeStepIntervals*TimeStepSize
+
+!
+! Linear functions in time (t) for heater power and He:
+!
+$ function p(t,p2,p1,t2,t1) { _p = ((p2-p1)/(t2-t1))*(t-t1)+p1 }
+
+Header
+  CHECK KEYWORDS Warn
+  Mesh DB "." "."
+  Include Path ""
+  Results Directory ""
+End
+
+Simulation
+  Max Output Level = 10
+  Coordinate System = "Axi Symmetric"
+  Coordinate Mapping(3) = 1 2 3
+
+!  Simulation Type = Steady
+  Steady State Max Iterations = $SSMaxIter
+
+  Simulation Type = Transient
+  Timestep Intervals = $TimeStepIntervals
+  Timestep sizes =  $TimeStepSize
+  Timestepping Method = BDF
+  BDF Order = 2
+
+  Post File = $PostFile
+  Output File = $OutputFile
+  Output Intervals(1) = $OutputIntervals
+ 
+  Restart File = $ RestartFile
+  Restart Position = $ RestartPos
+  Restart Time = $ RestartTime
+End
+
+Constants
+  Gravity(4) = 0 -1 0 9.82
+  Stefan Boltzmann = 5.67e-08
+End
+
+!----------------------- Bodies ---------------------------------------
+
+Body 1
+  Target Bodies(1) = 1
+  Name = CrystalAndMelt
+  Equation = 1
+  Material = 1
+  Initial Condition = 2
+!  Body Force = 3
+End
+
+Body 2
+  Target Bodies(1) = 2
+  Name = W_Crucible
+  Equation = 4
+  Material = 2
+  Initial Condition = 1
+End
+
+Body 3
+  Target Bodies(1) = 3
+  Name = W_shaft_top
+  Equation = 2
+  Material = 3
+  Initial Condition = 1
+End
+
+Body 4
+  Target Bodies(1) = 4
+  Name = W
+  Equation = 2
+  Material = 4
+  Initial Condition = 1
+End
+
+Body 5
+  Target Bodies(1) = 5
+  Name = AM-20
+  Equation = 2
+  Material = 5
+  Initial Condition = 1
+End
+
+Body 6
+  Target Bodies(1) = 6
+  Name = AGFHT
+  Equation = 2
+  Material = 6
+  Initial Condition = 1
+End
+
+Body 7
+  Target Bodies(1) = 7
+  Name = CC-19SH
+  Equation = 2
+  Material = 7
+  Initial Condition = 1
+End
+
+Body 8
+  Target Bodies(1) = 8
+  Name = CC-19SV
+  Equation = 2
+  Material = 7
+  Initial Condition = 1
+End
+
+Body 9
+  Target Bodies(1) = 9
+  Name = Carbone-2020
+  Equation = 2
+  Material = 8
+  Initial Condition = 1
+  Body Force = 1
+End
+
+Body 10
+  Target Bodies(1) = 10
+  Name = Argon
+  Equation = 2
+  Material = 9
+  Initial Condition = 1
+!  Body Force = 2
+End
+
+Body 11
+  Target Bodies(1) = 11
+  Name = SS
+  Equation = 2
+  Material = 10
+  Initial Condition = 1
+End
+
+Body 12
+  Target Bodies(1) = 12
+  Name = Molybdenum
+  Equation = 2
+  Material = 11
+  Initial Condition = 1
+End
+
+Body 13
+  Target Bodies(1) = 13
+  Name = Helium
+  Equation = 3
+  Material = 12
+  Initial Condition = 2
+  Body Force = 2
+End
+
+Body 14
+  Target Bodies(1) = 14
+  Name = Water
+  Equation = 2
+  Material = 13
+  Initial Condition = 1
+End
+
+Body 15
+  Target Bodies(1) = 15
+  Name = AX-50C
+  Equation = 2
+  Material = 14
+  Initial Condition = 1
+End
+
+Body 16
+  Target Bodies(1) = 16
+  Name = CC-14DF
+  Equation = 2
+  Material = 15
+  Initial Condition = 1
+End
+
+Body 17
+  Target Bodies(1) = 17
+  Name = CC-14DFandCC-16
+  Equation = 2
+  Material = 15
+  Initial Condition = 1
+End
+
+Body 18
+  Target Bodies(1) = 18
+  Name = AM-7
+  Equation = 2
+  Material = 16
+  Initial Condition = 1
+End
+
+Body 19
+  Target Bodies(1) = 19
+  Name = Copper
+  Equation = 2
+  Material = 17
+  Initial Condition = 1
+End
+
+!--------------------- Equations --------------------------------------
+
+Equation 1
+  Active Solvers(2) = 1 3
+!  Convection = Computed
+  Convection = None
+  Phase Change Model = Spatial 2
+  Check Latent Heat Release = True
+End
+
+Equation 2
+  Active Solvers(1) = 1
+  Convection = None
+End
+
+Equation 3
+  Active Solvers(2) = 1 2
+  Convection = Computed
+End
+
+Equation 4
+  Active Solvers(2) = 1 3
+  Convection = None
+End
+!--------------------  Solvers -------------------------------------------
+
+Solver 1
+  Equation = Heat Equation
+  Variable = "Temperature"
+  Stabilize = True
+!  Linear System Solver = Iterative
+!  Linear System Iterative Method = BiCGStab
+!  Linear System Convergence Tolerance = 1.0e-6
+!  Linear System Max Iterations = 1000
+!  Linear System Preconditioning = ILU
+!  Linear System Abort Not Converged = False
+!  Linear System Residual Output = 50
+
+  Linear System Solver = "Direct"
+  Linear System Direct Method = "umfpack"
+
+
+  Nonlinear System Newton After Iterations = 1
+  Nonlinear System Newton After Tolerance = 1.0e-3
+  Nonlinear System Max Iterations = $ TemperatureIterations
+  NonLinear System Convergence Tolerance = 1.0e-6
+  Nonlinear System Relaxation Factor = 1.0
+  Steady State Convergence Tolerance = 1.0e-6
+  
+  Minimum View Factor = 1.0e-8
+  Minimum Gebhardt Factor = 1.0e-8
+  Implicit Gebhardt Factor Fraction = 0.95
+End
+
+Solver 2
+  Equation = "Navier-Stokes"
+  Procedure = "FlowSolve" "FlowSolver"
+  Variable = Flow Solution[Velocity:2 Pressure:1]
+  Exec Solver = Always
+!  Stabilize = True
+  Bubbles = Logical True
+  Lumped Mass Matrix = False
+  Optimize Bandwidth = True
+  Steady State Convergence Tolerance = 1.0e-6
+
+  Nonlinear System Convergence Tolerance = 1.0e-05
+  Nonlinear System Max Iterations = 1
+  Nonlinear System Newton After Iterations = 3
+  Nonlinear System Newton After Tolerance = 1.0e-02
+  Nonlinear System Relaxation Factor = 0.3
+
+  Linear System Solver = "Direct"
+  Linear System Direct Method = "umfpack"
+End
+
+Solver 3
+  Equation = Linear elasticity
+  Procedure = "StressSolve" "StressSolver"
+  Variable = -dofs 2 Displacement
+  Stabilize = True
+  Bubbles = False
+  Lumped Mass Matrix = False
+  Optimize Bandwidth = True
+  Steady State Convergence Tolerance = 1.0e-6
+
+  Linear System Solver = Iterative
+  Linear System Iterative Method = BiCGStab
+  Linear System Max Iterations = 1000
+  Linear System Convergence Tolerance = 1.0e-8
+  Linear System Preconditioning = ILU0
+  Linear System Abort Not Converged = False
+  Linear System Residual Output = 100
+  Nonlinear System Convergence Tolerance = 1.0e-6
+  Nonlinear System Max Iterations = $DSIterations
+  Nonlinear System Newton After Iterations = 10
+  Nonlinear System Newton After Tolerance = 1.0e-3
+  Nonlinear System Relaxation Factor = 1
+
+  Calculate Stresses = Logical True
+End
+
+!---------------------  Materials  ------------------------------------
+
+Material 1
+  Name = CrystalAndMelt
+  Density = 3149.4
+!  Density = Variable Temperature
+!  Real
+!    273 3992.476
+!   2312.99 3766.595
+!   2313.01 3149.4
+!   2700 3149.4
+!  End
+  Heat Conductivity = Variable Temperature
+  Real
+    273 1.34
+    300 1.34
+    500 6.21
+    700 17
+    900 36.2
+    1100 66.2
+    1300 109.3
+    1500 167.9
+    1700 244.4
+    1900 341.2
+    2100 460.7
+    2312.99 460.7
+    2313.01 41.0
+    2700 41.0
+  End
+
+  Heat Capacity = Real 1.0
+
+  Enthalpy = Variable Temperature
+  Real
+    273 1558622706.0
+    300 1711489659.0
+    1000.00 5594128279.0
+    2312.99 12458298094.0
+    2313.01 17758970118.0    
+    2700.00 19294640864.0
+  End
+! Below: Should be e0
+!  Viscosity  = Variable Temperature
+!  Real
+!    300 1.0e3
+!    2312.99 1.0e3
+!    2313.01 0.057e2
+!    2380 0.042e2
+!    2427 0.036e2
+!    2519 0.032e2
+!  End
+!  Heat expansion Coefficient = 3.56e-4
+!  Reference Temperature = 2313.0
+  Emissivity = 0.33
+  Phase Change Intervals(2,1) = 2312.99 2313.01
+  Poisson Ratio = 0.29
+  Youngs Modulus = 4.4e11
+  Heat Expansion Coefficient = Variable Temperature
+  Real
+    300 5.4e-6
+    500 7.46e-6
+    700 8.35e-6
+    900 8.86e-6
+   1100 9.34e-6
+   1300 9.85e-6
+   1500 10.31e-6
+   1700 10.67e-6
+   1900 11.05e-6
+   2000 11.37e-6
+   2400 11.37e-6
+  End
+  Reference Temperature = 2313.0
+End
+
+Material 2
+  Name = W_Crucible
+  Density = Variable Temperature
+  Real
+    273 18180.15
+   2313 17554.5
+   2700 17554.5
+  End
+  Heat Conductivity = Variable Temperature
+  Real
+     200 197
+     400 161
+     600 139
+     800 127
+   1000 121
+   1200 115
+   1400 112.5
+   1600 107
+   1800 104
+   2000 100
+   2200 97
+   2400 96
+   2600 94
+   2700 94
+  End
+  Emissivity = 0.35
+  Heat Capacity = 276.0
+  Poisson Ratio = 0.28
+  Youngs Modulus = Variable Temperature
+  Real
+    300 3.978e11
+    500 3.959e11
+    700 3.919e11
+    900 3.857e11
+   1100 3.774e11
+   1300 3.668e11
+   1500 3.541e11
+   1700 3.393e11
+   1900 3.222e11
+   2100 3.030e11
+   2300 2.816e11
+   2500 2.580e11
+   2700 2.323e11
+  End
+  Heat Expansion Coefficient = Variable Temperature
+  Real
+    300 4.43e-6
+    500 4.65e-6
+    700 4.82e-6
+    900 4.97e-6
+   1100 5.13e-6
+   1300 5.32e-6
+   1500 5.55e-6
+   1700 5.83e-6
+   2000 6.32e-6
+   2200 6.72e-6
+   2400 7.18e-6
+   2600 7.71e-6
+  End
+  Reference Temperature = 2313.0
+End
+
+Material 3
+  Name = W_shaft_top
+  Density = Variable Temperature
+  Real
+    273 18180.15
+   2313 17554.5
+   2700 17554.5
+  End
+  Heat Conductivity = Variable Temperature
+  Real
+     200 197
+     400 161
+     600 139
+     800 127
+   1000 121
+   1200 115
+   1400 112.5
+   1600 107
+   1800 104
+   2000 100
+   2200 97
+   2400 96
+   2600 94
+   2700 94
+  End
+  Emissivity = 0.35
+  Heat Capacity = 276.0
+End
+
+Material 4
+  Name = W
+  Density = 10220
+  Heat Conductivity = Variable Temperature
+  Real
+     200 197
+     400 161
+     600 139
+     800 127
+   1000 121
+   1200 115
+   1400 112.5
+   1600 107
+   1800 104
+   2000 100
+   2200 97
+   2400 96
+   2600 94
+   2700 94
+  End
+  Emissivity = 0.35
+  Heat Capacity = 276.0
+End
+
+Material 5
+  Name = AM-20
+  Density = 1770.0
+  Heat Conductivity = 81.0
+  Emissivity = 0.9
+  Heat Capacity = Variable Temperature
+  Real
+    200 710.0
+    298 710.0
+    473 1120.0
+    673 1470.0
+    873 1700.0
+    1073 1830.0
+    1273 1930.0
+    1473 2000.0
+    1673 2050.0
+    1873 2080.0
+    2073 2100.0
+    2473 2150.0
+    2700 2150.0
+  End
+End
+
+Material 6
+  Name = AGFHT
+  Density = 85.0
+  Heat Conductivity = Variable Temperature
+  Real
+    200 0.076
+    473 0.076
+    673 0.104
+    873 0.136
+    1073 0.188
+    1273 0.282
+    1473 0.412
+    1673 0.584
+    1873 0.792
+    2073 1.06
+    2273 1.06   
+    2700 1.06
+  End
+  Emissivity = 0.9
+  Heat Capacity = Variable Temperature
+  Real
+    200 710.0
+    298 710.0
+    473 1120.0
+    673 1470.0
+    873 1700.0
+    1073 1830.0
+    1273 1930.0
+    1473 2000.0
+    1673 2050.0
+    1873 2080.0
+    2073 2100.0
+    2473 2150.0
+    2700 2150.0
+  End
+End
+
+Material 7
+  Name = CC-19SH/SV
+  Density = 1460.0
+  Heat Conductivity = 32.0
+  Emissivity = 0.9
+  Heat Capacity = Variable Temperature
+  Real
+    200 710.0
+    298 710.0
+    473 1120.0
+    673 1470.0
+    873 1700.0
+    1073 1830.0
+    1273 1930.0
+    1473 2000.0
+    1673 2050.0
+    1873 2080.0
+    2073 2100.0
+    2473 2150.0
+    2700 2150.0
+  End
+End
+
+Material 8
+  Name = Carbone-2020
+  Density = 1770.0
+  Heat Conductivity = 85.0
+  Emissivity = 0.9
+  Heat Capacity = Variable Temperature
+  Real
+    200 710.0
+    298 710.0
+    473 1120.0
+    673 1470.0
+    873 1700.0
+    1073 1830.0
+    1273 1930.0
+    1473 2000.0
+    1673 2050.0
+    1873 2080.0
+    2073 2100.0
+    2473 2150.0
+    2700 2150.0
+  End
+End
+
+Material 9
+  Name = Argon
+!  Compressibility Model = Perfect Gas
+!  Reference Pressure = 66661.0
+!  Specific Heat Ratio = 1.667
+
+  Density = Variable Temperature
+  Real
+    200 1.069
+    300 1.069
+    533.33 0.6
+    766.67 0.418
+    1000 0.32
+    2373 0.13515
+  End
+  Heat Capacity = 521.0
+  Heat Conductivity = Variable Temperature
+  Real
+    200 0.362
+    300 0.362
+   2100 1.448
+   2700 1.448
+  End
+!  Viscosity  = Variable Temperature
+!  Real
+!    200 1.88e-5
+!    300 2.38e-5
+!    500 3.31e-5
+!    700 4.17e-5
+!    900 4.97e-5
+!    1100 5.69e-5
+!    1300 6.35e-5
+!    1500 6.93e-5
+!    1700 7.45e-5
+!    1900 7.9e-5
+!    2100 8.27e-5
+!    2300 8.58e-5
+!    2500 8.82e-5
+!    2700 8.99e-5
+!  End
+End
+
+Material 10
+  Name = Steel
+  Density = 7850.0
+  Heat Conductivity = 15.0
+  Emissivity = 0.85
+  Heat Capacity = 500.0
+End
+
+Material 11
+  Name = Molybdenum
+  Density = 10200.0
+  Heat Conductivity = Variable Temperature
+  Real
+    300.0 121.7
+    810.9 121.7
+   1422.0 97.8
+   2700.0 97.8
+  End
+  Emissivity = 0.36
+  Heat Capacity = 282.6
+End
+
+Material 12
+  Name = Helium
+  Compressibility Model = Perfect Gas
+  Reference Pressure = 275000.0
+  Specific Heat Ratio = 1.667
+
+!  Density = Variable Temperature
+!  Real
+!    300.0 0.18
+!    700.0 0.21
+!   1100.0 0.23
+!   1500.0 0.25
+!   1900.0 0.26
+!   2300.0 0.27
+!   2700.0 0.27
+!  End
+  Heat Conductivity = Variable Temperature
+  Real
+    300.0 0.14
+    500.0 0.2
+   2000.0 0.54
+   2700.0 0.66
+  End
+  Heat Capacity = 5.19e3
+  Viscosity = Variable Temperature
+  Real
+    300.0 2.01e-5
+    700.0 3.64e-5
+   1100.0 4.99e-5
+   1500.0 6.21e-5
+   1900.0 7.32e-5
+   2300.0 8.37e-5
+   2700.0 9.37e-5
+  End 
+End
+
+Material 13
+  Name = Water
+  Density = 1000.0
+  Heat Conductivity = 0.6
+  Emissivity = 0.35
+  Heat Capacity = 4181.8
+End
+
+Material 14
+  Name = AX-50C
+  Density = 1750.0
+  Heat Conductivity = 178.0
+  Emissivity = 0.94
+  Heat Capacity = 720.0
+End
+
+Material 15
+  Name = CC-14DFandCC-16
+  Density = 1400.0
+  Heat Conductivity = 30.0
+  Emissivity = 0.94
+  Heat Capacity = 720.0
+End
+
+Material 16
+  Name = AM-7
+  Density = 1740.0
+  Heat Conductivity = 85.0
+  Emissivity = 0.94
+  Heat Capacity = 720.0
+End
+
+Material 17
+  Name = Copper
+  Density = 8960.0
+  Heat Conductivity = 401.0
+  Emissivity = 0.94
+  Heat Capacity = 380.0
+End
+!----------------------  Body force  ----------------------------------------
+
+Body Force 1
+!  Smart Heater Control = Logical True
+!  Heat Source = $HeaterPowerDensity
+  Heat Source = Variable Time
+    Real MATC "p(tx,HPowerDensityEnd,HPowerDensityStart,TTime,RestartTime)"
+End
+
+Body Force 2
+  Flow BodyForce 2 = -9.82
+End
+
+!Body Force 3
+!  Boussinesq = Logical True
+!End
+
+!----------------  Initial and boundary conditions ----------------
+
+Initial Condition 1
+  Temperature = Real 2000.0
+End
+
+Initial Condition 2
+  Temperature = Real 2000.0
+!  Velocity 1 = 0.0
+!  Velocity 2 = 0.0
+End
+
+Boundary Condition 1
+  Name = Others
+  Target Boundaries(1) = 1
+End
+
+Boundary Condition 2
+  Name = Radiative Boudaries
+  Target Boundaries(1) = 2
+  Heat Flux BC = Logical True
+  Radiation = Diffuse Gray
+End
+
+Boundary Condition 3
+  Name = External Boundaries
+  Target Boundaries(1) = 3
+  Temperature = Real 300.0
+End
+
+Boundary Condition 4
+  Name = Shaft-In
+  Target Boundaries(1) = 4
+  Heat Flux BC = Logical True
+  Radiation = Diffuse Gray
+  Velocity 1 = 0.0
+  Velocity 2 = 0.0
+!  Save Line = Logical True
+End
+
+Boundary Condition 5
+  Name = Ar-Inlet
+  Target Boundaries(1) = 5
+  Heat Flux BC = Logical True
+  Radiation = Diffuse Gray
+End
+
+Boundary Condition 6
+  Name = Ar-Outlet
+  Target Boundaries(1) = 6
+  Heat Flux BC = Logical True
+  Radiation = Diffuse Gray
+End
+
+Boundary Condition 7
+  Name = Ar-Symmetric-axis
+  Target Boundaries(1) = 7 
+End
+
+Boundary Condition 8
+  Name = Smart Heater Control
+  Target Boundaries(1) = 8
+!  Heat Flux BC = Logical True
+!  Radiation = Diffuse Gray
+!  Velocity 1 = Real 0.0
+!  Velocity 2 = Real 0.0
+!  Smart Heater Boundary = Logical True
+!  Smart Heater Temperature = Real 2312.0
+End
+
+Boundary Condition 9
+  Name = Helium Inflow
+  Target Boundaries(1) = 9
+  Temperature = Real 300.0
+  Velocity 1 = Real 0.0
+  Velocity 2 = $HeFlow
+End
+
+Boundary Condition 10
+  Name = He-Symmetric-axis
+  Target Boundaries(1) = 10 
+  Velocity 1 = Real 0.0
+End
+
+Boundary Condition 11
+  Name = He-Top-Horizontal
+  Target Boundaries(1) = 11
+  Heat Flux BC = Logical True
+  Radiation = Diffuse Gray
+  Velocity 1 = Real 0.0
+  Velocity 2 = Real 0.0
+!  Save Line = Logical True
+End
+
+Boundary Condition 12
+  Name = He-Moly-Out
+  Target Boundaries(1) = 12
+  Heat Flux BC = Logical True
+  Radiation = Diffuse Gray
+  Velocity 1 = Real 0.0
+  Velocity 2 = Real 0.0
+End
+
+Boundary Condition 13
+  Name = He-Outlet
+  Target Boundaries(1) = 13
+End
+
+Boundary Condition 14
+  Name = SpoolAndClamp
+  Target Boundaries(1) = 14
+  Temperature = Real 300.0
+End
+
+Boundary Condition 15
+  Name = Crystal-Symmetric-axis
+  Target Boundaries(1) = 15
+  Displacement 1 = Real 0.0
+End
+
+Boundary Condition 16
+  Name = Seed-pocket bottom
+  Target Boundaries(1) = 16
+  Displacement 1 = Real 0.0
+  Displacement 2 = Real 0.0
+End
+
+!Boundary Condition 17
+!  Name = Melt-crucible interface
+!  Target Boundaries(1) = 17
+!  Velocity 1 = Real 0.0
+!  Velocity 2 = Real 0.0
+!End
+
+!Boundary Condition 18
+!  Name = Crucible-in
+!  Target Boundaries(1) = 18
+!  Heat Flux BC = Logical True
+!  Radiation = Diffuse Gray
+!End
+
+!Boundary Condition 19
+!  Name = Crucible-out
+!  Target Boundaries(1) = 19
+!  Heat Flux BC = Logical True
+!  Radiation = Diffuse Gray
+!End
+

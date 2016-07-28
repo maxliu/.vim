@@ -1,0 +1,41 @@
+"""
+"
+"
+python import sys
+python import vim
+python import numpy as np
+python import re
+python sys.path.append(vim.eval('expand("<sfile>:h")'))
+
+"""========================================================
+function! Autoadd()
+	
+python << endOfPython
+
+def getLeadingSpace(line):
+	
+    space_n = len(line) - len(line.strip(' '))
+    all_n = len(line) - len(line.strip(''))
+    return space_n + (all_n - space_n) * 4
+    
+b = vim.current.buffer
+w = vim.current.window
+(r, l) = vim.current.window.cursor
+
+rx = r
+line = b[r-1]
+n = getLeadingSpace(line)
+
+def_com_str = ['\"\"\"', "\n", "Parameters","-"*10,"\n","\n",
+				"Return","-"*6,"\n", '\"\"\"']
+
+for i, com_str in enumerate(def_com_str):
+	b[(rx+i):(rx+i)] = [" "*(n+4) + "\"\"\""]
+
+
+
+endOfPython
+endfunction
+
+
+command! Autoadd call Autoadd()

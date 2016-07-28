@@ -1,0 +1,10 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhist_cnt =8
+let g:netrw_dirhist_1='/home/elmo/Elmer/HZ5'
+let g:netrw_dirhist_2='/home/elmo/Elmer/HZ5/Task33'
+let g:netrw_dirhist_3='/home/elmo/Elmer/HZ5/Task33/Case1-500-105-2mm'
+let g:netrw_dirhist_4='/home/elmo/Elmer/HZ5/Task33/Case1-500-105-2mm/Steady-He140-P590-20X'
+let g:netrw_dirhist_5='/home/elmo/Elmer/HZ5/Task31/Case5-380-105-2mm/Seeding-He140-P559-0256-20X'
+let g:netrw_dirhist_6='/home/elmo/Elmer/HZ5/Task35/Trans-He10-P561-20X-DS-10X'
+let g:netrw_dirhist_7='/home/max'
+let g:netrw_dirhist_8='/home/max/.vim'
