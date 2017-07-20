@@ -56,6 +56,7 @@ nmap <F8> :TagbarToggle<CR>
 :nn <Leader>nn :MyNerdTreeCtrl<CR>
 :nn <Leader>nf :NERDTreeFind<CR>
 :nn <F4> :Autoawin<CR>
+:map <Leader>rr :wa<Bar>execute '!tmux send-keys -t right "python  %:t" C-M' <C-M>'""'
 
 set nu
 "set relativenumber
