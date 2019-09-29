@@ -1,7 +1,7 @@
 
 import matplotlib.pyplot as plt
 
-print "plotbuf is imported"
+print( "plotbuf is imported")
 
 def isFloat(fstr):
     try:
@@ -41,7 +41,6 @@ def Plotbuffer(b, n0):
             break
 
     nend = n-1
-    print nstart, nend
 
     bfloat = b[nstart:nend+1]
 

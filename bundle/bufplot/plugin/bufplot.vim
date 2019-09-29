@@ -1,20 +1,20 @@
 """
 "
 "
-python import sys
-python import vim
-python import matplotlib.pyplot as plt
-python from pylab import *
-python import numpy as np
-python sys.path.append(vim.eval('expand("<sfile>:h")'))
+python3 import sys
+python3 import vim
+python3 import matplotlib.pyplot as plt
+python3 from pylab import *
+python3 import numpy as np
+python3 sys.path.append(vim.eval('expand("<sfile>:h")'))
 
-python PlotbufFlag  = 0
-python clr=['b*--','r*--','g^--', 'ro--']
+python3 PlotbufFlag  = 0
+python3 clr=['b*--','r*--','g^--', 'ro--']
 
 """========================================================
 function! BufferPlot()
 	
-python << endOfPython
+python3 << endOfPython
 
 
 from plotbuf import Plotbuffer

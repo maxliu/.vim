@@ -1,15 +1,15 @@
 
-python import sys
-python import vim
-python import numpy as np
-python import re
-python import datetime
-python sys.path.append(vim.eval('expand("<sfile>:h")'))
+python3 import sys
+python3 import vim
+python3 import numpy as np
+python3 import re
+python3 import datetime
+python3 sys.path.append(vim.eval('expand("<sfile>:h")'))
 
 """========================================================
 function! Autowin()
 	
-python << endOfPython
+python3 << endOfPython
 """
 Auto add comments for version, class, function.
 

@@ -1,16 +1,15 @@
 
-python import sys
-python import os
-python import vim
-python import numpy as np
-python import re
-python import datetime
-python sys.path.append(vim.eval('expand("<sfile>:h")'))
+python3 import sys
+python3 import os
+python3 import vim
+python3 import re
+python3 import datetime
+python3 sys.path.append(vim.eval('expand("<sfile>:h")'))
 
 """========================================================
 function! MyNerdTreeCtrl()
 	
-python << endOfPython
+python3 << endOfPython
 
 """
 
@@ -29,7 +28,7 @@ for w in vim.current.tabpage.windows:
         #print bf_name
         if bf_name.startswith("NERD_tree"):
             vim.command("NERDTreeToggle")
-            print "run toggle"
+            print ("run toggle")
             break
 else:              
         #vim.command("NERDTree")
