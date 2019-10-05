@@ -9,12 +9,12 @@ print ("going to delete message window")
 #   print b.number
 #   print b.name
 
-#   print 
+#   print
 for w in vim.windows:
 	#   print w.buffer.name
     if w.buffer.name == "":
-		vim.current.window = w
-		vim.command("q")
+			vim.current.window = w
+			vim.command("q")
 PYEND
 endfunction
 command! CleanWindows call Clean_windows()
